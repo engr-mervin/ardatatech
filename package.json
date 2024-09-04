@@ -1,0 +1,14 @@
+{
+  "name": "ardatatech",
+  "version": "1.0.0",
+  "description": "Technical Exam Ar Data Tech - John Mervin C. Bocatcat",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "\\"
+  ],
+  "author": "John Mervin C. Bocatcat <mervin@eonox.dev> (https://www.eonox.dev/)",
+  "license": "ISC"
+}
