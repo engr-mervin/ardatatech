@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "SET NODE_ENV=development&&tsx watch src/server.ts",
+    "prod": "SET NODE_ENV=production&&tsx watch src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

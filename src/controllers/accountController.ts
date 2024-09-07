@@ -13,7 +13,7 @@ export const getAccount = catchError(async function (req: Request, res: Response
   if (!accountId) {
     throw new APIError(400, "Account ID is required.");
   }
-  const account = await Account.findById(accountId).populate({ path: "transactions" });
+  const account = await Account.findById(accountId);
   if (!account) {
     throw new APIError(404, "Account is missing.");
   }
@@ -26,22 +26,34 @@ export const getAccountTransactions = catchError(async function (req: Request, r
   if (!req.account) {
     throw new APIError(404, "Account is missing.");
   }
+
+  const oldTransactions = (await req.account.populate<{ transactions: TransactionType[] }>({ path: "transactions" })).transactions.slice();
   const currentTimeStamp = new Date();
   let insertedTransactions: TransactionType[] = [];
 
-  //Do polling with interval of 5 minutes
-  //FOR IMPROVEMENT: Subscribe on alchemy events instead of polling
   if (new Date(req.account.lastTaken).getTime() + TRANSACTION_REFRESH_INTERVAL < currentTimeStamp.getTime()) {
     let allTransactions: AssetTransfersWithMetadataResult[] = [];
+    let incomingTransactions = [];
+    let outgoingTransactions = [];
     try {
-      const results = await Promise.all([getNonNFTIncomingTransactions(req.account.address), getNonNFTOutgoingTransactions(req.account.address)]);
-      allTransactions = [...results[0], ...results[1]];
+      const results = await Promise.all([
+        getNonNFTIncomingTransactions(req.account.address, req.account.lastBlockQueriedIncoming),
+        getNonNFTOutgoingTransactions(req.account.address, req.account.lastBlockQueriedOutgoing),
+      ]);
+      incomingTransactions = results[0];
+      outgoingTransactions = results[1];
     } catch (error) {
       throw new APIError(500, "Alchemy request error.");
     }
-    allTransactions = allTransactions.filter(
-      (transaction) => new Date(transaction.metadata.blockTimestamp).getTime() > new Date(req.account!.lastTimeStamp).getTime()
-    );
+
+    if (incomingTransactions.length) {
+      req.account.lastBlockQueriedIncoming = parseInt(incomingTransactions[incomingTransactions.length - 1].blockNum, 16);
+    }
+    if (outgoingTransactions.length) {
+      req.account.lastBlockQueriedOutgoing = parseInt(outgoingTransactions[outgoingTransactions.length - 1].blockNum, 16);
+    }
+
+    allTransactions = [...incomingTransactions, ...outgoingTransactions];
 
     const forInsertTransactions = allTransactions.map((transaction) => ({
       accountId: req.account!._id,
@@ -57,16 +69,13 @@ export const getAccountTransactions = catchError(async function (req: Request, r
 
     insertedTransactions = await Transaction.insertMany(forInsertTransactions);
 
-    if (forInsertTransactions.length) {
-      req.account.lastTimeStamp = new Date(allTransactions[allTransactions.length - 1].metadata.blockTimestamp);
-    }
-
     req.account.transactions.push(...insertedTransactions.map((tx) => tx._id));
     req.account.lastTaken = currentTimeStamp;
     await req.account.save();
   }
-  const allTransactions = [...req.account.transactions, ...insertedTransactions];
+  const allTransactions = [...insertedTransactions, ...oldTransactions];
 
+  allTransactions.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   res.status(200).json({
     data: allTransactions,
     count: allTransactions.length,

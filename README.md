@@ -14,7 +14,8 @@ The `Account` model represents a user or entity with a collection of transaction
   - `address`: The Ethereum address associated with the account.
   - `transactions`: An array of references to the `Transaction` model.
   - `lastTaken`: A timestamp indicating when the transactions were last fetched.
-  - `lastTimestamp`: A timestamp used for diffing to ensure only new transactions are added.
+  - `lastBlockQueriedOutgoing`: The block number of the last block queried for outgoing transactions.
+  - `lastBlockQueriedIncoming`: The block number of the last block queried for incoming transactions.
 
 ### Transaction
 
@@ -35,17 +36,16 @@ The `Transaction` model represents a single transaction related to an account.
 
 - **Endpoint Usage:**
 
-  - **Querying:** Uses a refresh strategy where transactions are updated based on a configurable interval. If the interval is set to 0, the service will always fetch the latest values.
+  - **Querying:** Uses a refresh strategy where transactions are updated based on a configurable interval `TRANSACTION_REFRESH_INTERVAL`. If the interval is set to 0, the service will always fetch the latest values.
 
 - **Fetching Logic:**
   - If `lastTaken` + refresh interval is less than the current time, fetch data from MongoDB.
-  - Otherwise, fetch the latest values from Alchemy and perform a diffing mechanism to save new transactions in MongoDB.
-  - Transactions are only added if their `blockTimestamp` is greater than `lastTimestamp`.
+  - Otherwise, fetch the latest values from Alchemy based on the last queried block.
 
 ## Configuration
 
 - **Refresh Interval:** Configurable interval for refreshing the transaction data. Set to 0 for always fetching the latest values.
-- **Alchemy Service Limit:** Currently limited to 15 records for presentation purposes. This limit will be removed in the production environment.
+- **Alchemy Service Limit:** Currently limited to 15 records for presentation purposes. This limit is only on DEV environment.
 
 ## Running the Project
 
@@ -55,8 +55,14 @@ The `Transaction` model represents a single transaction related to an account.
    npm install
    ```
 
-2. **Start the Development Server:**
+2a. **Start the Development Server:**
 
-   ```bash
-   npm run dev
-   ```
+```bash
+npm run dev
+```
+
+2b. **Start the Production Server:**
+
+```bash
+npm run prod
+```

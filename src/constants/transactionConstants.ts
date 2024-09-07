@@ -1,1 +1,1 @@
-export const TRANSACTION_REFRESH_INTERVAL = 300000; //5 minutes
+export const TRANSACTION_REFRESH_INTERVAL = 0; //5 minutes

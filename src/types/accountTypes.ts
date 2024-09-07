@@ -6,7 +6,8 @@ export interface IAccount {
   address: string;
   transactions: Types.ObjectId[];
   lastTaken: Date;
-  lastTimeStamp: Date;
+  lastBlockQueriedIncoming: number;
+  lastBlockQueriedOutgoing: number;
 }
 
 export interface IAccountMethods {}

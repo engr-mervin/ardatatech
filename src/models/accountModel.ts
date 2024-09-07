@@ -22,10 +22,13 @@ const accountSchema = new mongoose.Schema<IAccount, AccountModel, IAccountMethod
     // select: false,
     default: new Date(0),
   },
-  lastTimeStamp: {
-    type: Date,
-    // select: false,
-    default: new Date(0),
+  lastBlockQueriedOutgoing: {
+    type: Number,
+    default: 0,
+  },
+  lastBlockQueriedIncoming: {
+    type: Number,
+    default: 0,
   },
 });
 
