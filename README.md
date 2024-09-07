@@ -57,9 +57,9 @@ The `Transaction` model represents a single transaction related to an account.
 
 2. **Start the Development Server:**
 
-```bash
-npm run dev
-```
+   ```bash
+   npm run dev
+   ```
 
 ## Running the Project in Prod
 
@@ -71,9 +71,9 @@ npm run dev
 
 2. **Start the Production Server:**
 
-```bash
-npm run prod
-```
+   ```bash
+   npm run prod
+   ```
 
 ## For Improvements
 
