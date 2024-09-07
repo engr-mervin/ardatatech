@@ -47,7 +47,7 @@ The `Transaction` model represents a single transaction related to an account.
 - **Refresh Interval:** Configurable interval for refreshing the transaction data. Set to 0 for always fetching the latest values.
 - **Alchemy Service Limit:** Currently limited to 15 records for presentation purposes. This limit is only on DEV environment.
 
-## Running the Project
+## Running the Project Locally
 
 1. **Install Dependencies:**
 
@@ -55,13 +55,21 @@ The `Transaction` model represents a single transaction related to an account.
    npm install
    ```
 
-2a. **Start the Development Server:**
+2. **Start the Development Server:**
 
 ```bash
 npm run dev
 ```
 
-2b. **Start the Production Server:**
+## Running the Project in Prod
+
+1. **Install Dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+2. **Start the Production Server:**
 
 ```bash
 npm run prod
