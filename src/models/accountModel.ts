@@ -9,6 +9,7 @@ const accountSchema = new mongoose.Schema<IAccount, AccountModel, IAccountMethod
   },
   address: {
     type: String,
+    unique: true,
   },
   transactions: [
     {
@@ -16,6 +17,16 @@ const accountSchema = new mongoose.Schema<IAccount, AccountModel, IAccountMethod
       ref: "Transaction",
     },
   ],
+  lastTaken: {
+    type: Date,
+    // select: false,
+    default: new Date(0),
+  },
+  lastTimeStamp: {
+    type: Date,
+    // select: false,
+    default: new Date(0),
+  },
 });
 
 const Account = mongoose.model("Account", accountSchema);

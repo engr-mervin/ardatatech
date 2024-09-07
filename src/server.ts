@@ -1,6 +1,6 @@
+import "dotenv/config";
 import app from "@/app";
 import { ENV } from "config";
-import "dotenv/config";
 
 process.on("uncaughtException", (err) => {
   console.error(err);

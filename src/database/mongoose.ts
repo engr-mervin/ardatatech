@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import { ENV } from "config";
 
-const connectionString = ENV.MONGODB_CONNECTION_STRING.replace("<username>", ENV.MONGODB_USERNAME).replace("<password>", ENV.MONGODB_PASSWORD);
+const connectionString = ENV.MONGODB_CONNECTION_STRING.replace("<db_username>", ENV.MONGODB_USERNAME).replace("<db_password>", ENV.MONGODB_PASSWORD);
 
+console.log("hey", connectionString);
 (async function () {
   try {
     await mongoose.connect(connectionString);
