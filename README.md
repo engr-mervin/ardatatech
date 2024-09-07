@@ -66,3 +66,10 @@ npm run dev
 ```bash
 npm run prod
 ```
+
+## For Improvements
+
+1. **Identify if a transaction is a spam token or a legitimate one**
+2. **Build typescript on prod**
+3. **API validation and tests, validate response schema**
+4. **Add an endpoint to return the different currency/token balances for an account.**
